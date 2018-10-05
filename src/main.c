@@ -7,19 +7,18 @@ int main(void)
 
   new_linked_list(&ls);
 
-  ll_push(&ls, (void*) 1);
-  ll_push(&ls, (void*) 12);
-  ll_push(&ls, (void*) 15);
+  ll_push_end(&ls, 1);
+  ll_push_end(&ls, 12);
+  ll_push_start(&ls, 15);
 
   printf("ls size: %d\n", ls.size);
 
-  ll_remove(&ls, 0);
+  int s = ls.size;
+  for (int i = 0; i < s; i++)
+    printf("ls[%d]: %d\n", i, ll_pop_start(&ls));
 
   printf("ls size: %d\n", ls.size);
 
-  printf("ls[0]: %d\n", (int) ll_get(&ls, 0));
-  printf("ls[1]: %d\n", (int) ll_get(&ls, 1));
-  printf("ls[2]: %d\n", (int) ll_get(&ls, 2));
   return 0;
 }
 

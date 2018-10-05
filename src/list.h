@@ -20,11 +20,17 @@ void destroy_linked_list(linked_list *ls);
 
 void ll_add(linked_list *ls, const int idx, void *val);
 
-void ll_push(linked_list *ls, void *val);
+void ll_push_start(linked_list *ls, void *val);
+void ll_push_end(linked_list *ls, void *val);
 
-void * ll_get(linked_list *ls, const int i);
+void * ll_get(const linked_list *ls, const int i);
 
 void ll_remove(linked_list *ls, const int i);
+
+void * ll_pop_start(linked_list *ls);
+void * ll_pop_end(linked_list *ls);
+
+void ll_destroy(linked_list *ls);
 
 #endif
 

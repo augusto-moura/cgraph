@@ -18,7 +18,6 @@ void destroy_ll_node(ll_node *node)
   free(node);
 }
 
-
 linked_list * new_linked_list(linked_list *ls)
 {
   if (ls == NULL)
@@ -31,21 +30,7 @@ linked_list * new_linked_list(linked_list *ls)
   return ls;
 }
 
-void ll_push(linked_list *ls, void *val)
-{
-  ll_node *node = new_ll_node(NULL, val);
-
-  if (ls->head == NULL)
-    ls->head = node;
-
-  if (ls->last != NULL)
-    ls->last->next = node;
-
-  ls->last = node;
-  ls->size += 1;
-}
-
-void * ll_get(linked_list *ls, const int i)
+ll_node * ll_get_node(const linked_list *ls, const int i)
 {
   ll_node *cursor = ls->head;
   int j = 0;
@@ -53,33 +38,89 @@ void * ll_get(linked_list *ls, const int i)
   while (cursor != NULL && j++ < i)
     cursor = cursor->next;
 
-  return cursor->val;
+  return cursor;
+}
+
+void ll_add(linked_list *ls, const int i, void *val)
+{
+  ll_node *node = new_ll_node(NULL, val);
+
+  if (i == 0)
+  {
+    node->next = ls->head;
+
+    ls->head = node;
+    if (ls->last == NULL)
+      ls->last = node;
+  }
+  else
+  {
+    ll_node *prev_node = ll_get_node(ls, i - 1);
+
+    if (prev_node->next == NULL)
+      ls->last = node;
+
+    node->next = prev_node->next;
+    prev_node->next = node;
+  }
+
+  ls->size += 1;
+}
+
+void ll_push_start(linked_list *ls, void *val)
+{
+  ll_add(ls, 0, val);
+}
+
+void ll_push_end(linked_list *ls, void *val)
+{
+  ll_add(ls, ls->size, val);
+}
+
+void * ll_get(const linked_list *ls, const int i)
+{
+  ll_node *cursor = ll_get_node(ls, i);
+
+  return cursor != NULL ? cursor->val : NULL;
 }
 
 void ll_remove(linked_list *ls, const int i)
 {
-  ll_node *previous = NULL;
-  ll_node *current = ls->head;
-  int j = 0;
+  if (ls->size < i + 1)
+    return;
 
-  while (current != NULL && j++ < i)
-  {
-    previous = current;
-    current = current->next;
-  }
+  ll_node *prev = i == 0 ? NULL : ll_get_node(ls, i - 1);
+  ll_node *node = prev != NULL ? prev->next : ls->head;
 
-  if (current != NULL)
-  {
-    if (ls->last == current)
-      ls->last = previous;
+  if (prev != NULL)
+    prev->next = node->next;
 
-    if (ls->head == current)
-      ls->head = NULL;
+  if (node == ls->last)
+    ls->last = NULL;
 
-    if (previous != NULL)
-      previous->next = current->next;
+  if (node == ls->head)
+    ls->head = node->next;
 
-    destroy_ll_node(current);
-    ls->size -= 1;
-  }
+  ls->size -= 1;
+  destroy_ll_node(node);
+}
+
+void * ll_pop_start(linked_list *ls)
+{
+  void *result = ll_get(ls, 0);
+  ll_remove(ls, 0);
+  return result;
+}
+
+void * ll_pop_end(linked_list *ls)
+{
+  int i = ls->size - 1;
+  void *result = ll_get(ls, i);
+  ll_remove(ls, i);
+  return result;
+}
+
+void ll_destroy(linked_list *ls)
+{
+  
 }

@@ -1,7 +1,7 @@
 TARGET = main
 CC = gcc
 
-COMPILER_FLAGS = -g -Wall -Wno-pointer-to-int-cast -d
+COMPILER_FLAGS = -g -Wall -Wno-pointer-to-int-cast -Wno-format -Wno-int-conversion
 LINKER_FLAGS = -Wall
 
 ODIR = obj
